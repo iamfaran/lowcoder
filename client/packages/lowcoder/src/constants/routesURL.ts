@@ -124,6 +124,6 @@ export const buildSubscriptionInfoLink = (productId: string) => `${SUBSCRIPTION_
 
 export const buildSupportTicketLink = (ticketId: string) => `${SUPPORT_URL}/details/${ticketId}`;
 
-export const buildEnvironmentId = (environmentId: string) => `/settings/environments/${environmentId}`;
+export const buildEnvironmentId = (environmentId: string) => `${ENVIRONMENT_SETTING}/${environmentId}`;
 export const buildEnvironmentWorkspaceId = (environmentId: string, workspaceId: string) => 
   `${ENVIRONMENT_SETTING}/${environmentId}/workspaces/${workspaceId}`;
