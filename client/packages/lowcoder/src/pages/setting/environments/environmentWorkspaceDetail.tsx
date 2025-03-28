@@ -38,20 +38,67 @@ const ActionButton = styled(Button)`
   margin-left: 8px;
 `;
 
+// Define interfaces for our data types
+interface Environment {
+  id: string;
+  name: string;
+  domain: string;
+}
+
+interface Workspace {
+  id: string;
+  name: string;
+  owner: string;
+  users: number;
+  managed: boolean;
+  deployedTo: string[];
+}
+
+interface App {
+  id: string;
+  name: string;
+  icon: string;
+  published: boolean;
+  owner: string;
+  managed: boolean;
+  deployedTo: string[];
+}
+
+interface DataSource {
+  id: string;
+  name: string;
+  type: string;
+  managed: boolean;
+  deployedTo: string[];
+}
+
+interface Query {
+  id: string;
+  name: string;
+  dataSource: string;
+  managed: boolean;
+  deployedTo: string[];
+}
+
+interface DeployFormValues {
+  targetEnvironment: string;
+  copyConfig: boolean;
+}
+
 function EnvironmentWorkspaceDetail() {
   const { environmentId, workspaceId } = useParams<{ environmentId: string; workspaceId: string }>();
-  const [activeTab, setActiveTab] = useState("apps");
-  const [loading, setLoading] = useState(false);
-  const [workspace, setWorkspace] = useState(null);
-  const [apps, setApps] = useState([]);
-  const [dataSources, setDataSources] = useState([]);
-  const [queries, setQueries] = useState([]);
-  const [isDeployModalVisible, setIsDeployModalVisible] = useState(false);
-  const [deployType, setDeployType] = useState("");
-  const [deployForm] = Form.useForm();
+  const [activeTab, setActiveTab] = useState<string>("apps");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [workspace, setWorkspace] = useState<Workspace | null>(null);
+  const [apps, setApps] = useState<App[]>([]);
+  const [dataSources, setDataSources] = useState<DataSource[]>([]);
+  const [queries, setQueries] = useState<Query[]>([]);
+  const [isDeployModalVisible, setIsDeployModalVisible] = useState<boolean>(false);
+  const [deployType, setDeployType] = useState<string>("");
+  const [deployForm] = Form.useForm<DeployFormValues>();
   
   // Mock environments data
-  const environments = [
+  const environments: Environment[] = [
     { id: "env1", name: "Development", domain: "lowcoder-dev.company.com" },
     { id: "env2", name: "Testing", domain: "lowcoder-test.company.com" },
     { id: "env3", name: "Production", domain: "lowcoder-prod.company.com" },
@@ -65,8 +112,8 @@ function EnvironmentWorkspaceDetail() {
     setLoading(true);
     setTimeout(() => {
       // Mock workspace data
-      const mockWorkspace = {
-        id: workspaceId,
+      const mockWorkspace: Workspace = {
+        id: workspaceId || "",
         name: "Marketing Workspace",
         owner: "John Doe",
         users: 12,
@@ -75,7 +122,7 @@ function EnvironmentWorkspaceDetail() {
       };
       
       // Mock apps data
-      const mockApps = [
+      const mockApps: App[] = [
         { 
           id: "app1", 
           name: "Campaign Dashboard", 
@@ -106,7 +153,7 @@ function EnvironmentWorkspaceDetail() {
       ];
       
       // Mock data sources
-      const mockDataSources = [
+      const mockDataSources: DataSource[] = [
         { 
           id: "ds1", 
           name: "Marketing Database", 
@@ -124,7 +171,7 @@ function EnvironmentWorkspaceDetail() {
       ];
       
       // Mock queries
-      const mockQueries = [
+      const mockQueries: Query[] = [
         { 
           id: "q1", 
           name: "Campaign Performance", 
@@ -153,7 +200,7 @@ function EnvironmentWorkspaceDetail() {
     return <Spin spinning={true} />;
   }
   
-  const handleDeployModalOpen = (type, item = null) => {
+  const handleDeployModalOpen = (type: string, item: App | DataSource | Query | null = null) => {
     setDeployType(type);
     setIsDeployModalVisible(true);
     if (item) {
@@ -171,13 +218,13 @@ function EnvironmentWorkspaceDetail() {
   
   const handleDeploy = () => {
     deployForm.submit();
-    deployForm.validateFields().then((values) => {
+    deployForm.validateFields().then((values: DeployFormValues) => {
       console.log(`Deploy ${deployType} to ${values.targetEnvironment} environment`);
       console.log('Form values:', values);
       handleDeployModalClose();
       
       // Mock deployment success - update UI
-      if (deployType === 'workspace') {
+      if (deployType === 'workspace' && workspace) {
         setWorkspace({
           ...workspace,
           deployedTo: [...workspace.deployedTo, values.targetEnvironment]
@@ -252,13 +299,13 @@ function EnvironmentWorkspaceDetail() {
                   dataIndex: "icon",
                   key: "icon",
                   width: 70,
-                  render: (icon) => <div style={{ fontSize: '24px' }}>{icon}</div>
+                  render: (icon: string) => <div style={{ fontSize: '24px' }}>{icon}</div>
                 },
                 {
                   title: trans("environmentSettings.appName"),
                   dataIndex: "name",
                   key: "name",
-                  render: (text, record) => (
+                  render: (text: string, record: App) => (
                     <span>
                       {text}
                       {record.managed && (
@@ -273,7 +320,7 @@ function EnvironmentWorkspaceDetail() {
                   title: trans("environmentSettings.published"),
                   dataIndex: "published",
                   key: "published",
-                  render: (published) => (
+                  render: (published: boolean) => (
                     published ? (
                       <Tag color="green">{trans("environmentSettings.yes")}</Tag>
                     ) : (
@@ -290,7 +337,7 @@ function EnvironmentWorkspaceDetail() {
                   title: trans("environmentSettings.deployedTo"),
                   dataIndex: "deployedTo",
                   key: "deployedTo",
-                  render: (deployedTo) => (
+                  render: (deployedTo: string[]) => (
                     <>
                       {deployedTo.map(envId => {
                         const env = environments.find(e => e.id === envId);
@@ -304,7 +351,7 @@ function EnvironmentWorkspaceDetail() {
                 {
                   title: trans("environmentSettings.actions"),
                   key: "actions",
-                  render: (_, record) => (
+                  render: (_: any, record: App) => (
                     <Button
                       type="primary"
                       size="small"
@@ -333,7 +380,7 @@ function EnvironmentWorkspaceDetail() {
                   title: trans("environmentSettings.dataSourceName"),
                   dataIndex: "name",
                   key: "name",
-                  render: (text, record) => (
+                  render: (text: string, record: DataSource) => (
                     <span>
                       {text}
                       {record.managed && (
@@ -353,7 +400,7 @@ function EnvironmentWorkspaceDetail() {
                   title: trans("environmentSettings.deployedTo"),
                   dataIndex: "deployedTo",
                   key: "deployedTo",
-                  render: (deployedTo) => (
+                  render: (deployedTo: string[]) => (
                     <>
                       {deployedTo.map(envId => {
                         const env = environments.find(e => e.id === envId);
@@ -367,7 +414,7 @@ function EnvironmentWorkspaceDetail() {
                 {
                   title: trans("environmentSettings.actions"),
                   key: "actions",
-                  render: (_, record) => (
+                  render: (_: any, record: DataSource) => (
                     <Button
                       type="primary"
                       size="small"
@@ -396,7 +443,7 @@ function EnvironmentWorkspaceDetail() {
                   title: trans("environmentSettings.queryName"),
                   dataIndex: "name",
                   key: "name",
-                  render: (text, record) => (
+                  render: (text: string, record: Query) => (
                     <span>
                       {text}
                       {record.managed && (
@@ -416,7 +463,7 @@ function EnvironmentWorkspaceDetail() {
                   title: trans("environmentSettings.deployedTo"),
                   dataIndex: "deployedTo",
                   key: "deployedTo",
-                  render: (deployedTo) => (
+                  render: (deployedTo: string[]) => (
                     <>
                       {deployedTo.map(envId => {
                         const env = environments.find(e => e.id === envId);
@@ -430,7 +477,7 @@ function EnvironmentWorkspaceDetail() {
                 {
                   title: trans("environmentSettings.actions"),
                   key: "actions",
-                  render: (_, record) => (
+                  render: (_: any, record: Query) => (
                     <Button
                       type="primary"
                       size="small"
@@ -450,7 +497,7 @@ function EnvironmentWorkspaceDetail() {
       {/* Deploy Modal */}
       <Modal
         title={trans(`environmentSettings.deploy${deployType.charAt(0).toUpperCase() + deployType.slice(1)}Title`)}
-        visible={isDeployModalVisible}
+        open={isDeployModalVisible}
         onCancel={handleDeployModalClose}
         onOk={handleDeploy}
         okText={trans("environmentSettings.deployButton")}
