@@ -19,22 +19,31 @@ const SectionTitle = styled.div`
   }
 `;
 
+// Define interface for user group data
+interface UserGroup {
+  id: string;
+  name: string;
+  users: number;
+  managed: boolean;
+  deployed: string[];
+}
+
 interface UserGroupListProps {
   environmentId: string;
   expanded?: boolean;
 }
 
 const UserGroupList: React.FC<UserGroupListProps> = ({ environmentId, expanded = false }) => {
-  const [loading, setLoading] = useState(false);
-  const [userGroups, setUserGroups] = useState([]);
-  const [activeTab, setActiveTab] = useState("overview"); // This would typically come from parent component
+  const [loading, setLoading] = useState<boolean>(false);
+  const [userGroups, setUserGroups] = useState<UserGroup[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("overview"); // This would typically come from parent component
 
   useEffect(() => {
     // Mock API call to fetch user groups
     setLoading(true);
     setTimeout(() => {
       // Mock data
-      const mockUserGroups = [
+      const mockUserGroups: UserGroup[] = [
         {
           id: "ug1",
           name: "Marketing Team",
@@ -69,7 +78,7 @@ const UserGroupList: React.FC<UserGroupListProps> = ({ environmentId, expanded =
     }, 1000);
   }, [environmentId]);
 
-  const toggleUserGroupManaged = (userGroupId, currentState) => {
+  const toggleUserGroupManaged = (userGroupId: string, currentState: boolean) => {
     // Mock API call to toggle user group managed state
     console.log(`Toggle user group ${userGroupId} managed state to ${!currentState}`);
     
@@ -84,7 +93,7 @@ const UserGroupList: React.FC<UserGroupListProps> = ({ environmentId, expanded =
       title: trans("environmentSettings.userGroupName"),
       dataIndex: "name",
       key: "name",
-      render: (text, record) => (
+      render: (text: string, record: UserGroup) => (
         <span>
           {text}
           {record.managed && (
@@ -103,7 +112,7 @@ const UserGroupList: React.FC<UserGroupListProps> = ({ environmentId, expanded =
     {
       title: trans("environmentSettings.manage"),
       key: "manage",
-      render: (_, record) => (
+      render: (_: any, record: UserGroup) => (
         <StyledSwitch
           checked={record.managed}
           onChange={() => toggleUserGroupManaged(record.id, record.managed)}
@@ -113,7 +122,7 @@ const UserGroupList: React.FC<UserGroupListProps> = ({ environmentId, expanded =
     {
       title: trans("environmentSettings.actions"),
       key: "actions",
-      render: (_, record) => (
+      render: (_: any, record: UserGroup) => (
         <Button 
           type="primary" 
           size="small"
@@ -148,7 +157,7 @@ const UserGroupList: React.FC<UserGroupListProps> = ({ environmentId, expanded =
           dataSource={expanded ? userGroups : userGroups.slice(0, 3)}
           columns={columns}
           rowKey="id"
-          pagination={expanded}
+          pagination={expanded ? {} : false}
         />
       </Spin>
     </div>

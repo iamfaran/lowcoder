@@ -21,22 +21,33 @@ const SectionTitle = styled.div`
   }
 `;
 
+// Define interface for workspace data
+interface Workspace {
+  id: string;
+  name: string;
+  owner: string;
+  users: number;
+  apps: number;
+  managed: boolean;
+  deployed: string[];
+}
+
 interface WorkspaceListProps {
   environmentId: string;
   expanded?: boolean;
 }
 
 const WorkspaceList: React.FC<WorkspaceListProps> = ({ environmentId, expanded = false }) => {
-  const [loading, setLoading] = useState(false);
-  const [workspaces, setWorkspaces] = useState([]);
-  const [activeTab, setActiveTab] = useState("overview"); // This would typically come from parent component
+  const [loading, setLoading] = useState<boolean>(false);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("overview"); // This would typically come from parent component
 
   useEffect(() => {
     // Mock API call to fetch workspaces
     setLoading(true);
     setTimeout(() => {
       // Mock data
-      const mockWorkspaces = [
+      const mockWorkspaces: Workspace[] = [
         {
           id: "ws1",
           name: "Marketing",
@@ -79,7 +90,7 @@ const WorkspaceList: React.FC<WorkspaceListProps> = ({ environmentId, expanded =
     }, 1000);
   }, [environmentId]);
 
-  const toggleWorkspaceManaged = (workspaceId, currentState) => {
+  const toggleWorkspaceManaged = (workspaceId: string, currentState: boolean) => {
     // Mock API call to toggle workspace managed state
     console.log(`Toggle workspace ${workspaceId} managed state to ${!currentState}`);
     
@@ -94,7 +105,7 @@ const WorkspaceList: React.FC<WorkspaceListProps> = ({ environmentId, expanded =
       title: trans("environmentSettings.workspaceName"),
       dataIndex: "name",
       key: "name",
-      render: (text, record) => (
+      render: (text: string, record: Workspace) => (
         <span>
           {text}
           {record.managed && (
@@ -123,7 +134,7 @@ const WorkspaceList: React.FC<WorkspaceListProps> = ({ environmentId, expanded =
     {
       title: trans("environmentSettings.manage"),
       key: "manage",
-      render: (_, record) => (
+      render: (_: any, record: Workspace) => (
         <StyledSwitch
           checked={record.managed}
           onChange={() => toggleWorkspaceManaged(record.id, record.managed)}
@@ -133,7 +144,7 @@ const WorkspaceList: React.FC<WorkspaceListProps> = ({ environmentId, expanded =
     {
       title: trans("environmentSettings.actions"),
       key: "actions",
-      render: (_, record) => (
+      render: (_: any, record: Workspace) => (
         <Button 
           type="primary" 
           size="small"
@@ -169,7 +180,7 @@ const WorkspaceList: React.FC<WorkspaceListProps> = ({ environmentId, expanded =
           dataSource={expanded ? workspaces : workspaces.slice(0, 3)}
           columns={columns}
           rowKey="id"
-          pagination={expanded}
+          pagination={expanded ? {} : false}
         />
       </Spin>
     </div>
