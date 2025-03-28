@@ -148,7 +148,7 @@ function EnvironmentSetting() {
       stage: "development",
       isMaster: true,
       hasApiKey: true,
-      createTime: Date.now() - 7 * 24 * 60 * 60 * 1000,
+      createTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     },
     {
       id: "env2",
@@ -157,7 +157,7 @@ function EnvironmentSetting() {
       stage: "testing",
       isMaster: false,
       hasApiKey: true,
-      createTime: Date.now() - 14 * 24 * 60 * 60 * 1000,
+      createTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     },
     {
       id: "env3",
@@ -166,7 +166,7 @@ function EnvironmentSetting() {
       stage: "production",
       isMaster: false,
       hasApiKey: false,
-      createTime: Date.now() - 30 * 24 * 60 * 60 * 1000,
+      createTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     },
   ];
 
@@ -177,7 +177,7 @@ function EnvironmentSetting() {
   const [form] = Form.useForm();
   const [apiKeyForm] = Form.useForm();
   const [isApiKeyModalVisible, setIsApiKeyModalVisible] = useState(false);
-  const [currentEnvironment, setCurrentEnvironment] = useState(null);
+  const [currentEnvironment, setCurrentEnvironment] = useState<DataItemInfo | null>(null);
 
   // Mock state for environment creation (replace with actual selector when available)
   const environmentCreateStatus = "idle"; // useSelector(getEnvironmentCreateStatus);
@@ -207,7 +207,7 @@ function EnvironmentSetting() {
     }
   };
 
-  const handleApiKeyModalOpen = (environment) => {
+  const handleApiKeyModalOpen = (environment: DataItemInfo) => {
     setCurrentEnvironment(environment);
     setIsApiKeyModalVisible(true);
   };
@@ -225,7 +225,7 @@ function EnvironmentSetting() {
       //   environmentId: currentEnvironment.id,
       //   apiKey: values.apiKey
       // }));
-      console.log("Update API Key for environment", currentEnvironment.id, values.apiKey);
+      console.log("Update API Key for environment", currentEnvironment?.id, values.apiKey);
       handleApiKeyModalClose();
     });
   };
