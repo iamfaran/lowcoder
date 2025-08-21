@@ -34,7 +34,7 @@ export const getTableHeaderStyles = (
                 font-weight: ${headerStyle.textWeight};
                 font-family: ${headerStyle.fontFamily};
                 font-style: ${headerStyle.fontStyle};
-                color: ${headerStyle.text}
+                color: ${headerStyle.headerText};
               }
             }
 
