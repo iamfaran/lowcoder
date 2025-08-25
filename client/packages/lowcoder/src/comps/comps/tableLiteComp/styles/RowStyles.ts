@@ -4,6 +4,12 @@ export const RowStyleProvider = styled.div<{
   $rowStyle: any;
   $showHRowGridBorder: boolean;
 }>`
+
+  /* Hide the measure row to avoid the extra space */
+  tr.ant-table-measure-row{
+        visibility: collapse;
+  } 
+  
   /* Only apply row styles if explicitly set by user */
   .ant-table-tbody > tr {
     ${props => props.$rowStyle?.background && `background: ${props.$rowStyle.background};`}
