@@ -1,15 +1,23 @@
 import styled from "styled-components";
 
-export const TableContainer = styled.div<{ $style: any }>`
-  width: 100%;
-  height: 100%;
-  position: relative;
+export const TableContainer = styled.div<{
+  $style: any;
+}>`
+  /* Small size */
+  .ant-table-small .ant-table-tbody > tr > td {
+    padding: 8px 8px !important;
+  }
   
-  /* Base table container styles */
-  background: ${props => props.$style?.background || 'transparent'};
-  border: ${props => props.$style?.border || 'none'};
-  border-radius: ${props => props.$style?.borderRadius || '0'};
+  /* Middle size */
+  .ant-table-middle .ant-table-tbody > tr > td {
+    padding: 12px 8px !important;
+  }
   
-  /* Custom CSS injection */
+  /* Default size */
+  .ant-table:not(.ant-table-small):not(.ant-table-middle) .ant-table-tbody > tr > td {
+    padding: 16px 16px !important;
+  }
+  
+  /* Your existing TableContainer styles */
   ${props => props.$style?.customCSS || ''}
 `;
