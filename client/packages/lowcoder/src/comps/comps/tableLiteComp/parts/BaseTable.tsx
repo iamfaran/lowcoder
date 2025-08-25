@@ -68,8 +68,8 @@ import {
       showHeader = true,
       fixedHeader = false,
       showHRowGridBorder = false,
-      showVerticalScrollbar = true,
-      showHorizontalScrollbar = true,
+      showVerticalScrollbar = false,
+      showHorizontalScrollbar = false,
       ...restProps
     } = props;
   
