@@ -61,6 +61,7 @@ import {
       scroll,
       virtual,
       dataSource,
+      size = "large",
       //  the style props
       style,
       headerStyle,
@@ -72,7 +73,7 @@ import {
       showHorizontalScrollbar = false,
       ...restProps
     } = props;
-  
+    
     const [resizeData, setResizeData] = useState({ index: -1, width: -1 });
   
   
@@ -206,6 +207,7 @@ import {
                 scroll={scroll || { x: 'max-content' }}
                 showHeader={showHeader}
                 sticky={fixedHeader ? { offsetHeader: 0 } : false}
+                size={size}
               />
             </CellStyleProvider>
           </ScrollbarStyleProvider>
