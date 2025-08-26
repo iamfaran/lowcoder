@@ -24,19 +24,24 @@ export const RowStyleProvider = styled.div<{
    ${props => props.$rowStyle?.minHeight && `min-height: ${props.$rowStyle.minHeight};`}
  }
  
- /* Row hover effects - only if explicitly set */
- ${props => props.$rowStyle?.hoverRowBackground && `
-   .ant-table-tbody > tr:hover {
-     background: ${props.$rowStyle.hoverRowBackground} !important;
-   }
- `}
+/* Row hover effects - only if explicitly set */
+${props => props.$rowStyle?.hoverRowBackground && `
+  .ant-table-wrapper .ant-table-tbody > tr:hover > td {
+    background: ${props.$rowStyle.hoverRowBackground} !important;
+  }
+  
+  /* Also handle selected row hover state */
+  .ant-table-wrapper .ant-table-tbody > tr.ant-table-row-selected:hover > td {
+    background: ${props.$rowStyle.hoverRowBackground} !important;
+  }
+`}
  
  /* Alternating row colors - only if explicitly set */
- ${props => props.$rowStyle?.alternatingBackground && `
-   .ant-table-tbody > tr:nth-child(even) {
-     background: ${props.$rowStyle.alternatingBackground};
-   }
- `}
+${props => props.$rowStyle?.alternateBackground && `
+  .ant-table-tbody > tr:nth-child(even) > td {
+    background: ${props.$rowStyle.alternateBackground} !important;
+  }
+`}
  
  /* Selected row styling - only if explicitly set */
  ${props => props.$rowStyle?.selectedRowBackground && `
